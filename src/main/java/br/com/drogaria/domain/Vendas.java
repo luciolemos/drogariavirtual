@@ -8,9 +8,12 @@ package br.com.drogaria.domain;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -30,6 +33,10 @@ public class Vendas implements Serializable {
     private String horario;
     @Column (name="ven_valor_total")
     private String total;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "func_codigo")
+    private Funcionario funcionario;
 
     public Vendas() {
     }

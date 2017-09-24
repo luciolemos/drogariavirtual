@@ -6,6 +6,7 @@
 package br.com.drogaria.domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,16 +27,21 @@ public class Fabricante implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column (name="fab_codigo")
     private Long id;
-    @Column (name="fab_descricao")
+    
+    @Column (name="fab_descrição",length = 45,nullable = false)
     private String descricao;
+
+    @Column (name="fab_cnpj", length = 45,unique = true,nullable = false)
+    private String cnpj;
 
     public Fabricante() {
     }
 
-    public Fabricante(Long id, String descricao) {
+    public Fabricante(Long id, String descricao, String cnpj) {
         this.id = id;
         this.descricao = descricao;
-    }       
+        this.cnpj = cnpj;
+    }
 
     public Long getId() {
         return id;
@@ -52,24 +58,35 @@ public class Fabricante implements Serializable {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    
-    
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Fabricante)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Fabricante other = (Fabricante) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Fabricante other = (Fabricante) obj;
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
@@ -77,7 +94,9 @@ public class Fabricante implements Serializable {
 
     @Override
     public String toString() {
-        return "br.com.drogaria.domain.Fabricante[ id=" + id + " ]";
+        return "Fabricante{" + "id=" + id + ", descricao=" + descricao + ", cnpj=" + cnpj + '}';
     }
+
+    
     
 }

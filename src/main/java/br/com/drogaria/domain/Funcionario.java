@@ -6,12 +6,16 @@
 package br.com.drogaria.domain;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -26,26 +30,35 @@ public class Funcionario implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column (name="func_codigo")
     private Long id;
-    @Column (name="func_nome")
+    
+    @Column (name="func_nome",length = 45,nullable = false)
     private String nome;
-    @Column (name="func_cpf")
+   
+    @Column (name="func_cpf",length = 14,unique = true,nullable = false)
     private String cpf;
-    @Column (name="func_senha")
+   
+    @Column (name="func_senha",length = 32,nullable = false)
     private String senha;
-    @Column (name="func_funcao")
+    
+    @Column (name="func_funcao",length = 45,nullable = false)
     private String funcao;
+   
+    @Temporal(TemporalType.DATE)
+    @Column(name="func_data_nasc",nullable = false)
+    private Calendar nascimento;
 
     public Funcionario() {
     }
 
-    public Funcionario(Long id, String nome, String cpf, String senha, String funcao) {
+    public Funcionario(Long id, String nome, String cpf, String senha, String funcao, Calendar nascimento) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.senha = senha;
         this.funcao = funcao;
+        this.nascimento = nascimento;
     }
-        
+
     public Long getId() {
         return id;
     }
@@ -85,22 +98,35 @@ public class Funcionario implements Serializable {
     public void setFuncao(String funcao) {
         this.funcao = funcao;
     }
-    
+
+    public Calendar getNascimento() {
+        return nascimento;
+    }
+
+    public void setNascimento(Calendar nascimento) {
+        this.nascimento = nascimento;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Funcionario)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Funcionario other = (Funcionario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Funcionario other = (Funcionario) obj;
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
@@ -108,7 +134,9 @@ public class Funcionario implements Serializable {
 
     @Override
     public String toString() {
-        return "br.com.drogaria.domain.Funcionario[ id=" + id + " ]";
+        return "Funcionario{" + "id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", senha=" + senha + ", funcao=" + funcao + ", nascimento=" + nascimento + '}';
     }
     
+    
+
 }

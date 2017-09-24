@@ -6,11 +6,16 @@
 package br.com.drogaria.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -25,22 +30,33 @@ public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column (name="it_codigo")
-    private Long id;
+    private Long id;   
+        
     @Column (name="it_quantidade")
     private Integer qtde;
     
-    @Column (name="it_valor_parcial")
-    private Float valor;
+    @Column (name="it_valor_parcial",precision = 7,scale = 2,nullable = false)
+    private BigDecimal valor;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name ="tbl_vendas_ven_codigo",referencedColumnName = "ven_codigo")
+    private Vendas venda;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name ="tbl_produtos_pro_codigo",referencedColumnName = "pro_codigo")
+    private Produto produto;
 
     public Item() {
     }
 
-    public Item(Long id, Integer qtde, Float valor) {
+    public Item(Long id, Integer qtde, BigDecimal valor, Vendas venda, Produto produto) {
         this.id = id;
         this.qtde = qtde;
         this.valor = valor;
+        this.venda = venda;
+        this.produto = produto;
     }
-             
+
     public Long getId() {
         return id;
     }
@@ -57,35 +73,50 @@ public class Item implements Serializable {
         this.qtde = qtde;
     }
 
-    public Float getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(Float valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 
-    
+    public Vendas getVenda() {
+        return venda;
+    }
 
-    
-    
-    
+    public void setVenda(Vendas venda) {
+        this.venda = venda;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 7;
+        hash = 73 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Item)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Item other = (Item) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Item other = (Item) obj;
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
@@ -93,7 +124,10 @@ public class Item implements Serializable {
 
     @Override
     public String toString() {
-        return "br.com.drogaria.domain.Itens[ id=" + id + " ]";
+        return "Item{" + "id=" + id + ", qtde=" + qtde + ", valor=" + valor + ", venda=" + venda + ", produto=" + produto + '}';
     }
     
+    
+    
+
 }
